@@ -7,6 +7,7 @@ import sys, re
 class MyWindow(QtWidgets.QMainWindow, ui_MyWindow.Ui_MainWindow):
 
     def __init__(self, parent=None):
+
         QtWidgets.QWidget.__init__(self, parent)
         self.setupUi(self)
         self.adressLine.setText('myProgram.txt')
