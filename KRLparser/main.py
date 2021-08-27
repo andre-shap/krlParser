@@ -147,11 +147,18 @@ END''')  # Назначаем стартовый текст
 
     def directKinematicsTransformer(self,a1, a2, a3, a4, a5):
         # Параметры Денавита-Хартенберга
-        alpha=(-math.pi/2, 0, math.pi/2, -math.pi/2, math.pi/2)
+        # Если считаем относительно стрелы
+        alpha=(-math.pi/2, 0, -math.pi/2, math.pi/2, math.pi/2)
         a=(0, -221.12, 0, 0, 185.52)
-        d=(230.5, 0, 0, 224, 0)
-        theta=(float(a1)*math.pi/180, float(a2)*math.pi/180+math.pi/2, float(a3)*math.pi/180, float(a4)*math.pi/180, float(a5)*math.pi/180-math.pi/2)
-        #print(theta)
+        d=(230.6, 0, 0, -224, 0)
+        theta=(float(a1)*math.pi/180, float(a2)*math.pi/180+math.pi/2, float(a3)*math.pi/180-math.pi/2, float(a4)*math.pi/180, float(a5)*math.pi/180-math.pi/2)
+        # Если считаем относительно сгиба на 90 в третьем джоинте
+        '''
+        a=(0, -221.12, 0, 0, 185.52)
+        alpha=(-math.pi/2, 0, math.pi/2, -math.pi/2, math.pi/2)
+        d=(230.6, 0, 0, 224, 0)
+        theta=(float(a1)*math.pi/180, float(a2)*math.pi/180+math.pi/2, float(a3)*math.pi/180, float(a4)*math.pi/180, float(a5)*math.pi/180-math.pi/2) 
+        '''
         rxList=[]
         ryList=[]
         rzList=[]
@@ -225,16 +232,20 @@ END''')  # Назначаем стартовый текст
         r22 = round(r[1,1], 2)
         r23 = round(r[1,2], 2)
         r31 = round(r[2,0], 2)
-        r32 = round(r[2, 1], 2)
+        r32 = round(r[2,1], 2)
         r33 = round(r[2,2], 2)
         #print(r11, r12, r13, r21, r22, r23, r31, r32, r33)
-        #if r31!=0:
-        bettaAngle=round(math.degrees(-math.atan2(r31, math.sqrt(1-math.pow(r31,2)))), 2)
-        gammaAngle=round(math.degrees(math.atan2(r21, r11)), 2)
-        alphaAngle=round(math.degrees(math.atan2(r32, r33)), 2)
-        print('Углы Эйлера (r33!=+-1):', gammaAngle, bettaAngle, alphaAngle)
-        return ()
-
+        if r31!=1 and r31!=-1:
+            bettaAngle=round(math.degrees(-math.atan2(r31, math.sqrt(1-math.pow(r31,2)))), 2)
+            gammaAngle=round(math.degrees(math.atan2(r21, r11)), 2)
+            alphaAngle=round(math.degrees(math.atan2(r32, r33)), 2)
+            print('Углы Эйлера (r31!=+-1):', gammaAngle, bettaAngle, alphaAngle)
+        elif r31==1:
+            sumGammaAlpha=round(math.degrees(math.atan2(r13, r23)), 2)
+            print('Сумма альфы и гаммы (r31=1): ', sumGammaAlpha)
+        elif r31==-1:
+            difGammaAlpha=round(math.degrees(-math.atan2(r13, r23)), 2)
+            print('Разность гаммы и альфы (r31=-1): ', difGammaAlpha)
         #else:
             #if r31!=0:
                 #bettaAngle=round(math.degrees(math.cos(r33)), 2)
